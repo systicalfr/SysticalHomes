@@ -4,8 +4,9 @@ import io.papermc.paper.dialog.DialogResponseView;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
-public final class HomesGUIListener {
+public final class HomesGUIListener implements Listener {
 
     public HomesGUIListener() {
     }
