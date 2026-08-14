@@ -1,7 +1,7 @@
 name: HomesGUI
 version: '1.0.0'
 main: com.homesgui.HomesGUI
-api-version: '26.2'
+api-version: '1.21'
 author: YourName
 description: A GUI-based homes plugin - up to 5 homes per player.
 
