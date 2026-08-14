@@ -4,7 +4,7 @@ import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
-import io.papermc.paper.registry.data.dialog.body.DialogBody;
+import io.papermc.paper.registry.data.dialog.body.ItemDialogBody;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
 import net.kyori.adventure.key.Key;
@@ -60,7 +60,7 @@ public class HomesDialogs {
 
         DialogBase.Builder base = DialogBase.builder(Component.text(title));
         if (home != null) {
-            base.body(List.of(DialogBody.item(new ItemStack(materialOf(home.icon)))));
+            base.body(List.of(ItemDialogBody.builder(new ItemStack(materialOf(home.icon))).build()));
         }
 
         return Dialog.create(factory -> factory
