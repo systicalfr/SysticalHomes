@@ -6,8 +6,8 @@ import io.papermc.paper.registry.data.dialog.DialogBase;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,20 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Builds every Dialog screen for the plugin, using Paper's Dialog API
- * (io.papermc.paper.dialog). Note: on this Paper build, ActionButton has
- * no per-button icon support, so buttons are text-only.
- */
-public class HomesDialogs {
+public final class HomesDialogs {
 
     private static final int COLUMNS = 4;
+
+    private HomesDialogs() {
+    }
 
     public static Dialog mainMenu(Player player) {
         List<ActionButton> buttons = new ArrayList<>();
 
         for (int i = 1; i <= HomesGUI.MAX_HOMES; i++) {
             HomeManager.Home home = HomeManager.getHomeBySlot(player, i);
+
             if (home != null) {
                 buttons.add(button(home.name, action("home_detail_" + i)));
             } else {
@@ -39,8 +38,7 @@ public class HomesDialogs {
 
         return Dialog.create(factory -> factory
                 .empty()
-                .base(DialogBase.builder(Component.text("Homes"))
-                        .build())
+                .base(DialogBase.builder(Component.text("Homes")).build())
                 .type(DialogType.multiAction(buttons, null, COLUMNS)));
     }
 
@@ -54,12 +52,14 @@ public class HomesDialogs {
         buttons.add(button("Rename", action("rename_open_" + slot)));
         buttons.add(redButton("Delete", action("delete_open_" + slot)));
 
-        ActionButton back = button("Back", action("back_main"));
-
         return Dialog.create(factory -> factory
                 .empty()
                 .base(DialogBase.builder(Component.text(title)).build())
-                .type(DialogType.multiAction(buttons, back, 2)));
+                .type(DialogType.multiAction(
+                        buttons,
+                        button("Back", action("back_main")),
+                        2
+                )));
     }
 
     public static Dialog renameDialog(Player player, int slot) {
@@ -86,13 +86,13 @@ public class HomesDialogs {
         HomeManager.Home home = HomeManager.getHomeBySlot(player, slot);
         String name = home != null ? home.name : "this home";
 
-        ActionButton cancel = button("Cancel", action("home_detail_" + slot));
-        ActionButton delete = redButton("Delete", action("delete_confirm_" + slot));
-
         return Dialog.create(factory -> factory
                 .empty()
                 .base(DialogBase.builder(Component.text("Delete " + name + "?")).build())
-                .type(DialogType.confirmation(delete, cancel)));
+                .type(DialogType.confirmation(
+                        redButton("Delete", action("delete_confirm_" + slot)),
+                        button("Cancel", action("home_detail_" + slot))
+                )));
     }
 
     public static Dialog iconPicker(Player player, int slot, String search) {
@@ -104,11 +104,22 @@ public class HomesDialogs {
         buttons.add(button("Search", action("icon_search_" + slot)));
         buttons.add(button("Back", action("home_detail_" + slot)));
 
-        String needle = (search == null) ? "" : search.toLowerCase(Locale.ROOT);
-        for (Material m : Material.values()) {
-            if (!m.isItem() || m.isLegacy()) continue;
-            if (!needle.isEmpty() && !m.name().toLowerCase(Locale.ROOT).contains(needle)) continue;
-            buttons.add(button(prettyName(m.name()), action("icon_pick_" + slot + "_" + m.name())));
+        String needle = search == null ? "" : search.toLowerCase(Locale.ROOT);
+
+        for (Material material : Material.values()) {
+            if (!material.isItem() || material.isLegacy()) {
+                continue;
+            }
+
+            if (!needle.isEmpty()
+                    && !material.name().toLowerCase(Locale.ROOT).contains(needle)) {
+                continue;
+            }
+
+            buttons.add(button(
+                    prettyName(material.name()),
+                    action("icon_pick_" + slot + "_" + material.name())
+            ));
         }
 
         return Dialog.create(factory -> factory
@@ -119,20 +130,27 @@ public class HomesDialogs {
                 .type(DialogType.multiAction(buttons, null, COLUMNS)));
     }
 
-    // --- helpers ---
-
     private static DialogAction action(String value) {
-        return DialogAction.customClick(Key.key("homesgui", value.toLowerCase(Locale.ROOT)), null);
+        return DialogAction.customClick((response, audience) -> {
+            if (audience instanceof Player player) {
+                HomesGUIListener.handle(player, value, response);
+            }
+        }, ClickCallback.Options.builder().uses(1).build());
     }
 
     private static String prettyName(String materialName) {
         String[] parts = materialName.split("_");
-        StringBuilder sb = new StringBuilder();
-        for (String p : parts) {
-            if (p.isEmpty()) continue;
-            sb.append(Character.toUpperCase(p.charAt(0))).append(p.substring(1).toLowerCase(Locale.ROOT)).append(' ');
+        StringBuilder builder = new StringBuilder();
+
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                builder.append(Character.toUpperCase(part.charAt(0)))
+                        .append(part.substring(1).toLowerCase(Locale.ROOT))
+                        .append(' ');
+            }
         }
-        return sb.toString().trim();
+
+        return builder.toString().trim();
     }
 
     private static ActionButton button(String label, DialogAction action) {
