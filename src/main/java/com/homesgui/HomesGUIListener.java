@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public final class HomesGUIListener {
 
-    private HomesGUIListener() {
+    public HomesGUIListener() {
     }
 
     public static void handle(Player player, String value, DialogResponseView response) {
