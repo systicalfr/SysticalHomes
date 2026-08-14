@@ -1,12 +1,14 @@
-# HomesGUI
+# SysticalHomes
 
-A GUI-based homes plugin for Paper 26.2. 5 homes max per player.
+A GUI-based homes plugin for Paper 26.2
 
 - `/home` or `/homes` — opens the GUI (top row = orange beds for your homes,
   row below = red dye to delete — click twice within 5 seconds to confirm)
 - `/home <name>` — teleport directly to a named home
 - `/sethome [name]` — set a home via command
 - `/delhome <name>` — delete a home via command
+
+- Each player can only set up to 5 homes.
 
 Clicking an **empty (gray) bed** in the GUI sets a home at your current location.
 Clicking a **filled (orange) bed**, or using `/home <name>`, starts a 3-second
@@ -38,11 +40,3 @@ more `-R0.1-SNAPSHOT`). Also update `api-version` in
 `src/main/resources/plugin.yml` to match (e.g. `'26.1'`, `'26.2'`, etc.).
 Browse available builds here:
 https://repo.papermc.io/#browse/browse:maven-public:io%2Fpapermc%2Fpaper%2Fpaper-api
-
-## No Java/Maven installed and don't want to?
-
-Easiest zero-install option: upload this whole folder to
-https://replit.com (New Repl → Import from folder/zip → choose "Java" or
-just run `mvn package` in its shell) — it has internet access and Maven
-preinstalled, and will spit out the jar for you to download in under a
-minute.
