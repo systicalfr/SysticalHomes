@@ -9,9 +9,9 @@
     <packaging>jar</packaging>
 
     <properties>
-        <!-- Paper 26.x requires Java 25 -->
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <!-- Paper 1.21.x requires Java 21 -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -23,18 +23,10 @@
     </repositories>
 
     <dependencies>
-        <!--
-          As of Paper 26.x, the old "-R0.1-SNAPSHOT" version suffix is gone,
-          replaced with a plain build-number scheme. The exact build below
-          may not be the newest by the time you build this - check for a
-          later one at:
-          https://repo.papermc.io/#browse/browse:maven-public:io%2Fpapermc%2Fpaper%2Fpaper-api
-          (Gradle users can just use "26.2.build.+" to always grab latest.)
-        -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>26.2.build.112-stable</version>
+            <version>1.21.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
