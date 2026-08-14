@@ -22,14 +22,13 @@ public class HomesGUI extends JavaPlugin {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+
         loadHomesConfig();
 
         getCommand("home").setExecutor(new HomeCommand());
         getCommand("homes").setExecutor(new HomeCommand());
         getCommand("sethome").setExecutor(new SetHomeCommand());
         getCommand("delhome").setExecutor(new DelHomeCommand());
-
-        getServer().getPluginManager().registerEvents(new HomesGUIListener(), this);
 
         getLogger().info("HomesGUI enabled - " + MAX_HOMES + " homes per player.");
     }
@@ -45,6 +44,7 @@ public class HomesGUI extends JavaPlugin {
 
     private void loadHomesConfig() {
         homesFile = new File(getDataFolder(), "homes.yml");
+
         if (!homesFile.exists()) {
             try {
                 homesFile.createNewFile();
@@ -52,6 +52,7 @@ public class HomesGUI extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+
         homesConfig = YamlConfiguration.loadConfiguration(homesFile);
     }
 
