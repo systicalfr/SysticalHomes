@@ -20,8 +20,8 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Upload jar
+      - name: Upload Plugin JAR
         uses: actions/upload-artifact@v4
         with:
-          name: HomesGUI-jar
-          path: target/HomesGUI.jar
+          name: SysticalHomes-Plugin
+          path: target/*.jar
