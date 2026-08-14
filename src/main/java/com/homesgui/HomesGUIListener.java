@@ -20,7 +20,8 @@ public class HomesGUIListener implements Listener {
     public void onCustomClick(PlayerCustomClickEvent event) {
         Key id = event.getIdentifier();
         if (!"homesgui".equals(id.namespace())) return;
-        if (!(event.getCommonConnection() instanceof Player player)) return;
+        Player player = event.getPlayer();
+        if (player == null) return;
 
         String value = id.value();
 
