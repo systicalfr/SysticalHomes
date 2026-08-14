@@ -35,9 +35,6 @@ public class HomesMenu {
 
             if (home != null) {
                 List<String> lore = new ArrayList<>();
-                lore.add("§7World: §f" + home.world);
-                lore.add("§7X: §f" + Math.round(home.x) + "  §7Y: §f" + Math.round(home.y) + "  §7Z: §f" + Math.round(home.z));
-                lore.add("");
                 lore.add("§aClick to teleport here");
                 ItemStack bed = namedItem(Material.ORANGE_BED, "§6§l" + home.name, lore);
                 inv.setItem(HOME_SLOTS[i], bed);
@@ -52,7 +49,11 @@ public class HomesMenu {
                 lore.add("§7at your current location");
                 ItemStack empty = namedItem(Material.GRAY_BED, "§7Empty Slot " + slotNum, lore);
                 inv.setItem(HOME_SLOTS[i], empty);
-                // delete slot underneath stays as filler glass
+
+                List<String> dlore = new ArrayList<>();
+                dlore.add("§7No home set here yet");
+                ItemStack grayDye = namedItem(Material.GRAY_DYE, "§7Empty", dlore);
+                inv.setItem(DELETE_SLOTS[i], grayDye);
             }
         }
 
