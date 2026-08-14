@@ -12,11 +12,11 @@ import java.util.List;
 
 public class HomesMenu {
 
-    public static final int SIZE = 27;
-    // Row 1 (indices 0-8): home slots, centered
-    public static final int[] HOME_SLOTS = {2, 3, 4, 5, 6};
-    // Row 2 (indices 9-17): matching delete slots, directly below each home slot
-    public static final int[] DELETE_SLOTS = {11, 12, 13, 14, 15};
+    public static final int SIZE = 36;
+    // Row 2 of 4 (indices 9-17), centered horizontally
+    public static final int[] HOME_SLOTS = {11, 12, 13, 14, 15};
+    // Row 3 of 4 (indices 18-26), directly below each home slot
+    public static final int[] DELETE_SLOTS = {20, 21, 22, 23, 24};
 
     public static Inventory build(Player player) {
         HomesGUIHolder holder = new HomesGUIHolder();
@@ -44,7 +44,7 @@ public class HomesMenu {
 
                 List<String> dlore = new ArrayList<>();
                 dlore.add("§7Click twice to delete this home");
-                ItemStack delete = namedItem(Material.BARRIER, "§c§lDelete " + home.name, dlore);
+                ItemStack delete = namedItem(Material.RED_DYE, "§c§lDelete " + home.name, dlore);
                 inv.setItem(DELETE_SLOTS[i], delete);
             } else {
                 List<String> lore = new ArrayList<>();
