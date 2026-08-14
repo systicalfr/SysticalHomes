@@ -1,6 +1,7 @@
 package com.homesgui;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -61,6 +62,7 @@ public class HomesGUIListener implements Listener {
             Location loc = player.getLocation();
             String name = "Home " + slot;
             HomeManager.setHome(player, slot, name, loc);
+            player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);
             player.sendMessage("§aHome §6" + name + " §aset at your location!");
             player.closeInventory();
             player.openInventory(HomesMenu.build(player));
