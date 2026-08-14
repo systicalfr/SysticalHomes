@@ -1,5 +1,6 @@
 package com.homesgui;
 
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +21,7 @@ public class SetHomeCommand implements CommandExecutor {
             HomeManager.Home existing = HomeManager.getHomeByName(player, name);
             if (existing != null) {
                 HomeManager.setHome(player, existing.slot, name, player.getLocation());
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);
                 player.sendMessage("§aHome §6" + name + " §aupdated at your location!");
                 return true;
             }
@@ -33,6 +35,7 @@ public class SetHomeCommand implements CommandExecutor {
         int slot = HomeManager.firstFreeSlot(player);
         String finalName = name != null ? name : "Home " + slot;
         HomeManager.setHome(player, slot, finalName, player.getLocation());
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);
         player.sendMessage("§aHome §6" + finalName + " §aset at your location!");
         return true;
     }
