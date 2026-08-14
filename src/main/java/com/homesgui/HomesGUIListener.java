@@ -1,5 +1,6 @@
 package com.homesgui;
 
+import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import net.kyori.adventure.key.Key;
@@ -20,8 +21,8 @@ public class HomesGUIListener implements Listener {
     public void onCustomClick(PlayerCustomClickEvent event) {
         Key id = event.getIdentifier();
         if (!"homesgui".equals(id.namespace())) return;
-        Player player = event.getPlayer();
-        if (player == null) return;
+        if (!(event.getCommonConnection() instanceof PlayerGameConnection conn)) return;
+        Player player = conn.getPlayer();
 
         String value = id.value();
 
@@ -70,73 +71,3 @@ public class HomesGUIListener implements Listener {
         if (value.startsWith("icon_open_")) {
             int slot = parseTrailingInt(value, "icon_open_");
             player.showDialog(HomesDialogs.iconPicker(player, slot, null));
-            return;
-        }
-
-        if (value.startsWith("icon_search_")) {
-            int slot = parseTrailingInt(value, "icon_search_");
-            String search = readText(event, "icon_search");
-            player.showDialog(HomesDialogs.iconPicker(player, slot, search));
-            return;
-        }
-
-        if (value.startsWith("icon_pick_")) {
-            // format: icon_pick_<slot>_<MATERIAL_NAME>
-            String rest = value.substring("icon_pick_".length());
-            int underscore = rest.indexOf('_');
-            int slot = Integer.parseInt(rest.substring(0, underscore));
-            String material = rest.substring(underscore + 1).toUpperCase();
-            HomeManager.setIcon(player, slot, material);
-            player.showDialog(HomesDialogs.homeDetail(player, slot));
-            return;
-        }
-
-        if (value.startsWith("delete_open_")) {
-            int slot = parseTrailingInt(value, "delete_open_");
-            player.showDialog(HomesDialogs.deleteConfirm(player, slot));
-            return;
-        }
-
-        if (value.startsWith("delete_confirm_")) {
-            int slot = parseTrailingInt(value, "delete_confirm_");
-            HomeManager.Home home = HomeManager.getHomeBySlot(player, slot);
-            String name = home != null ? home.name : "Home " + slot;
-            HomeManager.deleteHome(player, slot);
-            player.sendMessage("§cHome §6" + name + " §cdeleted.");
-            player.showDialog(HomesDialogs.mainMenu(player));
-        }
-    }
-
-    private void createHome(Player player, int slot) {
-        if (HomeManager.getHomeBySlot(player, slot) == null && HomeManager.countHomes(player) >= HomesGUI.MAX_HOMES) {
-            player.sendMessage("§cYou already have the maximum of " + HomesGUI.MAX_HOMES + " homes.");
-            player.showDialog(HomesDialogs.mainMenu(player));
-            return;
-        }
-        Location loc = player.getLocation();
-        String name = "Home " + slot;
-        HomeManager.setHome(player, slot, name, loc);
-        player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f);
-        player.sendMessage("§aHome §6" + name + " §aset at your location!");
-        player.showDialog(HomesDialogs.homeDetail(player, slot));
-    }
-
-    private int parseTrailingInt(String value, String prefix) {
-        return Integer.parseInt(value.substring(prefix.length()));
-    }
-
-    /**
-     * Reads a submitted text input's value from the dialog response.
-     * Exact method name/shape may need adjusting for your Paper build.
-     */
-    private String readText(PlayerCustomClickEvent event, String inputKey) {
-        try {
-            var response = event.getDialogResponseView();
-            if (response == null) return null;
-            return response.getText(inputKey);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-}
-
