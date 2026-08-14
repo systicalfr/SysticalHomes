@@ -60,7 +60,8 @@ public class HomesDialogs {
 
         DialogBase.Builder base = DialogBase.builder(Component.text(title));
         if (home != null) {
-            base.body(List.of(DialogBody.item(new ItemStack(materialOf(home.icon)))));
+            // FIXED: Added .build() so it resolves as a DialogBody instead of a Builder!
+            base.body(List.of(DialogBody.item(new ItemStack(materialOf(home.icon))).build()));
         }
 
         return Dialog.create(factory -> factory
